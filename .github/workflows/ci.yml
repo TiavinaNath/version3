@@ -20,7 +20,13 @@ jobs:
 
     env:
       AWS_REGION: eu-west-3
-      
+      TEST: ${{
+              (github.event_name == 'pull_request' && github.base_ref == 'prod') && secrets.PROD_TEST ||
+              (github.event_name == 'pull_request' && github.base_ref == 'preprod') && secrets.PREPROD_TEST ||
+              (github.ref == 'refs/heads/prod') && secrets.PROD_TEST ||
+              (github.ref == 'refs/heads/preprod') && secrets.PREPROD_TEST
+              }}
+
 
     steps:
       - uses: actions/checkout@v4.1.6
